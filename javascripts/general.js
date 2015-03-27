@@ -1,12 +1,6 @@
 var myFirebaseRef = new Firebase("https://idea-room.firebaseio.com/");
 
 myFirebaseRef.once('value', function(dataSnapShot) {
-	// dataSnapShot.forEach(function(word) {
-	// 	var top = word.val()['top'];
-	// 	var left = word.val()['left'];
-	// 	$('body').append('<p id=' + word.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + word.key() + '</p>');
-	// 	makeDraggable();
-	// })
 	readPositions(dataSnapShot);
 })
 
@@ -33,7 +27,7 @@ function randomHorizontal() {
 }
 
 function placeWord(data) {
-  $('body').append('<p id=' + data.Word + ' class=\'word ui-widget-content\' style=\'top: ' + randomVerical() + 'px; left: ' + randomHorizontal() + 'px\'>' + data.Word + '</p>');
+  $('body').prepend('<p id=' + data.Word + ' class=\'word ui-widget-content\' style=\'top: ' + randomVerical() + 'px; left: ' + randomHorizontal() + 'px\'>' + data.Word + '</p>');
   makeDraggable();
   writePositions();
 }
@@ -41,9 +35,17 @@ function placeWord(data) {
 function makeDraggable() {
 	$('.word').draggable({
 		drag: function() {
-			writePositions();
+			writePosition(this);
 		}
 	});
+}
+
+function writePosition(object) {
+	var vehicle = {};
+	var id = $(object).attr('id');
+	var position = $(object).position();
+	vehicle[id] = { 'top' : position.top, 'left' : position.left };
+	myFirebaseRef.update(vehicle)
 }
 
 function writePositions() {
@@ -51,11 +53,13 @@ function writePositions() {
 		var word = {};
 		var id = $(this).attr('id');
 		var position = $(this).position();
-		var topValue = position.top;
-		var leftValue = position.left;
 		word[id] = { 'top' : position.top, 'left' : position.left };
 		myFirebaseRef.update(word);
 	})
+}
+
+function readPosition(dataSnapShot) {
+	
 }
 
 function readPositions(dataSnapShot) {
@@ -66,7 +70,7 @@ function readPositions(dataSnapShot) {
 			$('#' + word.key()).css('top', top + 'px');
 			$('#' + word.key()).css('left', left + 'px');
 		} else {
-			$('body').append('<p id=' + word.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + word.key() + '</p>');
+			$('body').prepend('<p id=' + word.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + word.key() + '</p>');
 		}
 	})
 	makeDraggable();
