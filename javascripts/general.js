@@ -1,12 +1,24 @@
-var myFirebaseRef = new Firebase("https://idea-room.firebaseio.com/");
+var ref = new Firebase("https://idea-room.firebaseio.com/");
 
-myFirebaseRef.once('value', function(dataSnapShot) {
-	readPositions(dataSnapShot);
+ref.on('child_added', function(data, prevChildName) {
+	readPosition(data);
+	makeDraggable();
 })
 
-myFirebaseRef.on('value', function(dataSnapShot) {
-	readPositions(dataSnapShot);
+ref.on('child_changed', function(data, prevChildName) {
+	readPosition(data);
+	makeDraggable();
 })
+
+ref.on('child_removed', function(data) {
+	$('#' + data.key()).remove();
+})
+
+function addHandlers() {
+	$('button').on('click', function() {
+		RandomWord();
+	})
+}
 
 function RandomWord() {
   var requestStr = "http://randomword.setgetgo.com/get.php";
@@ -28,8 +40,7 @@ function randomHorizontal() {
 
 function placeWord(data) {
   $('body').prepend('<p id=' + data.Word + ' class=\'word ui-widget-content\' style=\'top: ' + randomVerical() + 'px; left: ' + randomHorizontal() + 'px\'>' + data.Word + '</p>');
-  makeDraggable();
-  writePositions();
+  writePosition($('#' + data.Word));
 }
 
 function makeDraggable() {
@@ -38,6 +49,10 @@ function makeDraggable() {
 			writePosition(this);
 		}
 	});
+
+	$('.word').on('dblclick', function() {
+		ref.child($(this).attr('id')).remove();
+	})
 }
 
 function writePosition(object) {
@@ -45,7 +60,7 @@ function writePosition(object) {
 	var id = $(object).attr('id');
 	var position = $(object).position();
 	vehicle[id] = { 'top' : position.top, 'left' : position.left };
-	myFirebaseRef.update(vehicle)
+	ref.update(vehicle)
 }
 
 function writePositions() {
@@ -54,30 +69,36 @@ function writePositions() {
 		var id = $(this).attr('id');
 		var position = $(this).position();
 		word[id] = { 'top' : position.top, 'left' : position.left };
-		myFirebaseRef.update(word);
+		ref.update(word);
 	})
 }
 
-function readPosition(dataSnapShot) {
-	
+function readPosition(data) {
+	var top = data.val()['top'];
+	var left = data.val()['left'];
+	if($('#' + data.key()).length == 1) {
+		$('#' + data.key()).css('top', top + 'px');
+		$('#' + data.key()).css('left', left + 'px');
+	} else {
+		$('body').prepend('<p id=' + data.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + data.key() + '</p>');
+	}
 }
 
-function readPositions(dataSnapShot) {
-	dataSnapShot.forEach(function(word) {
-		var top = word.val()['top'];
-		var left = word.val()['left'];
-		if($('#' + word.key()).length == 1) {
-			$('#' + word.key()).css('top', top + 'px');
-			$('#' + word.key()).css('left', left + 'px');
+function readPositions(data) {
+	data.forEach(function(object) {
+		var top = object.val()['top'];
+		var left = object.val()['left'];
+		if($('#' + object.key()).length == 1) {
+			$('#' + object.key()).css('top', top + 'px');
+			$('#' + object.key()).css('left', left + 'px');
 		} else {
-			$('body').prepend('<p id=' + word.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + word.key() + '</p>');
+			$('body').prepend('<p id=' + object.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + object.key() + '</p>');
 		}
 	})
-	makeDraggable();
 }
 
 $(document).on('ready', function() {
-	$('button').on('click', function() {
-		RandomWord();
-	})
+	ref.once('value', function(data) {
+		readPositions(data);
+	}, addHandlers())
 })
