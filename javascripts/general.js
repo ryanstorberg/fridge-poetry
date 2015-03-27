@@ -16,18 +16,22 @@ ref.on('child_removed', function(data) {
 
 function addHandlers() {
 	$('button').on('click', function() {
-		RandomWord();
+		getWord();
 	})
 }
 
-function RandomWord() {
-  var requestStr = "http://randomword.setgetgo.com/get.php";
-  $.ajax({
-    type: "GET",
-    url: requestStr,
-    dataType: "jsonp",
-    jsonpCallback: 'placeWord'
-  });
+var baseURL = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=1&maxLength=-1&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
+function getWord () {
+	var url = baseURL;
+	$.ajax ({ 
+		url: url,
+		dataType: "text" , 
+		timeout: 30000 
+		}) 
+	.success (function (data) { 
+		var word = JSON.parse(data).word;
+		placeWord(word);
+	})
 }
 
 function randomVerical() {
@@ -38,9 +42,9 @@ function randomHorizontal() {
 	return Math.round(Math.random() * ($(window).width() - 100));
 }
 
-function placeWord(data) {
-  $('body').prepend('<p id=' + data.Word + ' class=\'word ui-widget-content\' style=\'top: ' + randomVerical() + 'px; left: ' + randomHorizontal() + 'px\'>' + data.Word + '</p>');
-  writePosition($('#' + data.Word));
+function placeWord(word) {
+  $('body').prepend('<p id=' + word + ' class=\'word ui-widget-content\' style=\'top: ' + randomVerical() + 'px; left: ' + randomHorizontal() + 'px\'>' + word + '</p>');
+  writePosition($('#' + word));
 }
 
 function makeDraggable() {
