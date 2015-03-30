@@ -49,7 +49,13 @@ function placeWord(word) {
 
 function makeDraggable() {
 	$('.word').draggable({
+		start: function() {
+			writePosition(this);
+		},
 		drag: function() {
+			writePosition(this);
+		},
+		stop: function() {
 			writePosition(this);
 		}
 	});
@@ -105,4 +111,5 @@ $(document).on('ready', function() {
 	ref.once('value', function(data) {
 		readPositions(data);
 	}, addHandlers())
+	alert('If you click and drag a tile on this screen, anybody else who is viewing this webpage from their computer will see your activity in real-time, and vice-versa.');
 })
