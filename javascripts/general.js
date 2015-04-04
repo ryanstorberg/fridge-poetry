@@ -1,4 +1,4 @@
-var ref = new Firebase("https://idea-room.firebaseio.com/");
+var ref = new Firebase("https://fridge-poetry.firebaseio.com/");
 
 ref.on('child_added', function(data, prevChildName) {
 	readPosition(data);
