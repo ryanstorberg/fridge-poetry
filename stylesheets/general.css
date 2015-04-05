@@ -8,6 +8,21 @@ body {
   position: relative;
 }
 
+#user-count {
+  display: inline-block;
+  position: fixed;
+  height: 25px;
+  top: 25px;
+  left: 25px;
+  background-color: rgba(125, 175, 125, 0.50);
+  z-index: 1;
+  color: white;
+}
+
+#user-count p {
+  margin: 4.5px;
+}
+
 button {
   width: 75px;
   height: 75px;
@@ -24,6 +39,7 @@ button {
   outline: none;
   padding: 0;
   z-index: 1;
+  font-size: 1em;
 }
 
 button:active {

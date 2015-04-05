@@ -1,18 +1,32 @@
-var ref = new Firebase("https://fridge-poetry.firebaseio.com/");
+var users = new Firebase("https://fridge-poetry.firebaseio.com/users");
+var words = new Firebase("https://fridge-poetry.firebaseio.com/words");
+var currentUser = users.push({'user':'active'});
+currentUser.onDisconnect().remove();
 
-ref.on('child_added', function(data, prevChildName) {
+words.on('child_added', function(data, prevChildName) {
 	readPosition(data);
 	makeDraggable();
 })
 
-ref.on('child_changed', function(data, prevChildName) {
+words.on('child_changed', function(data, prevChildName) {
 	readPosition(data);
 	makeDraggable();
 })
 
-ref.on('child_removed', function(data) {
+words.on('child_removed', function(data) {
 	$('#' + data.key()).remove();
 })
+
+function updateUsers(data) {
+	var userCount = data.numChildren();
+	var userForm;
+	if(userCount > 1 || userCount == 0) {
+		userForm = 'users';
+	} else {
+		userForm = 'user';
+	}
+	$('#user-count p').text(userCount + ' ' + userForm + ' ' + 'online');
+}
 
 function addHandlers() {
 	$('button').on('click', function() {
@@ -61,7 +75,7 @@ function makeDraggable() {
 	});
 
 	$('.word').on('dblclick', function() {
-		ref.child($(this).attr('id')).remove();
+		words.child($(this).attr('id')).remove();
 	})
 }
 
@@ -70,7 +84,7 @@ function writePosition(object) {
 	var id = $(object).attr('id');
 	var position = $(object).position();
 	vehicle[id] = { 'top' : position.top, 'left' : position.left };
-	ref.update(vehicle)
+	words.update(vehicle);
 }
 
 function writePositions() {
@@ -79,7 +93,7 @@ function writePositions() {
 		var id = $(this).attr('id');
 		var position = $(this).position();
 		word[id] = { 'top' : position.top, 'left' : position.left };
-		ref.update(word);
+		words.update(word);
 	})
 }
 
@@ -108,7 +122,10 @@ function readPositions(data) {
 }
 
 $(document).on('ready', function() {
-	ref.once('value', function(data) {
+	users.once('value', function(data) {
+		updateUsers(data);
+	})
+	words.once('value', function(data) {
 		readPositions(data);
 	}, addHandlers())
 })
