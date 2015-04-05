@@ -11,7 +11,7 @@ body {
 #user-count {
   display: inline-block;
   position: fixed;
-  height: 25px;
+  height: 26px;
   top: 25px;
   left: 25px;
   background-color: rgba(125, 175, 125, 0.50);
@@ -20,7 +20,7 @@ body {
 }
 
 #user-count p {
-  margin: 4.5px;
+  margin: 5px;
 }
 
 button {
