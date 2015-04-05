@@ -18,7 +18,7 @@ words.on('child_removed', function(data) {
 })
 
 users.on('value', function(data) {
-	updateUsers();
+	updateUsers(data);
 })
 
 function updateUsers(data) {
