@@ -17,6 +17,10 @@ words.on('child_removed', function(data) {
 	$('#' + data.key()).remove();
 })
 
+users.on('value', function(data) {
+	updateUsers();
+})
+
 function updateUsers(data) {
 	var userCount = data.numChildren();
 	var userForm;
