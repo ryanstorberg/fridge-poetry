@@ -23,13 +23,13 @@ users.on('value', function(data) {
 
 function updateUsers(data) {
 	var userCount = data.numChildren();
-	var userForm;
-	if(userCount > 1 || userCount == 0) {
-		userForm = 'users';
+	if(userCount > 2) {
+		$('#user-count p').text('You\'re sharing this screen with ' + userCount - 1 + 'other people.');
+	} else if(userCount == 2){
+		$('#user-count p').text('You\'re sharing this screen with ' + userCount - 1 + 'other person.');
 	} else {
-		userForm = 'user';
+		$('#user-count p').text('There\'s nobody else here with you.');
 	}
-	$('#user-count p').text(userCount + ' ' + userForm + ' ' + 'online');
 }
 
 function addHandlers() {
