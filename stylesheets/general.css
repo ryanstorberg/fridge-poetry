@@ -19,6 +19,10 @@ body {
   color: white;
 }
 
+#user-count:hover {
+  cursor: help;
+}
+
 #user-count p {
   margin: 5px;
 }
