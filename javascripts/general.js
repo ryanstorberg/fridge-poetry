@@ -69,18 +69,31 @@ function makeDraggable() {
 	$('.word').draggable({
 		start: function() {
 			writePosition(this);
+			$(this).css('z-index', '2');
+			$('button').css('background-color', 'rgb(175, 125, 125)');
+			$('button img').attr('src', 'images/minus.png');
 		},
 		drag: function() {
 			writePosition(this);
 		},
 		stop: function() {
 			writePosition(this);
+			$(this).css('z-index', '0');
+			$('button').css('background-color', 'rgb(125, 175, 125)');
+			$('button img').attr('src', 'images/plus.png');
+
+			wordTop = $(this).position().top + ($(this).height() / 2);
+			wordLeft = $(this).position().left + ($(this).width() / 2);
+			buttonStartTop = $('button').position().top;
+			buttonEndTop = $('button').position().top + 50
+			buttonStartLeft = $('button').position().left
+			buttonEndLeft = $('button').position().left + 50
+
+			if((wordTop > buttonStartTop && wordTop < buttonEndTop) && (wordLeft > buttonStartLeft && wordLeft < buttonEndLeft)) {
+				words.child($(this).attr('id')).remove();
+			}
 		}
 	});
-
-	$('.word').on('dblclick', function() {
-		words.child($(this).attr('id')).remove();
-	})
 }
 
 function writePosition(object) {
