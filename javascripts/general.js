@@ -1,3 +1,4 @@
+var word_set = ["&","boil","for","is","&","boy","forest","is","a","breast","frantic","it","a","but","friend","it","a","but","from","it","a","but","from","juice","a","but","garden","lake","a","butt","girl","language","about","by","go","languid","above","by","goddess","lather","ache","can","gorgeous","lazy","ad","chant","gown","less","after","chocolate","hair","let","all","cool","has","lick","am","could","have","lie","am","crush","have","life","an","cry","he","light","an","d","he","like","and","day","head","like","and","death","heave","like","and","delirious","her","live","and","diamond","her","love","apparatus","did","here","luscious","are","do","him","lust","are","do","his","ly","arm","dream","his","ly","as","dress","honey","ly","as","drive","hot","ly","as","drool","how","mad","as","drunk","I","man","ask","eat","I","me","at","ed","I","me","at","ed","I","me","at","ed","if","mean","away","ed","in","meat","bare","egg","in","men","be","elaborate","in","milk","beat","enormous","ing","mist","beauty","er","ing","moan","bed","es","ing","moon","beneath","est","ing","mother","bitter","fast","ing","music","black","feet","ing","must","blood","fiddle","is","my","blow","finger","is","my","blue","fluff","is","my","need","s","the","y","never","s","the","y","no","s","their","yet","no","s","there","you","not","s","these","you","not","sad","they","you","of","said","those","you","of","sausage","though","of","say","thousand","of","scream","through","on","sea","time","on","see","tiny","one","shadow","to","or","she","to","our","she","to","over","shine","together","pant","ship","tongue","peach","shot","trudge","petal","show","TV","picture","sing","ugly","pink","sit","up","play","skin","urge","please","sky","us","pole","sleep","use","pound","smear","want","puppy","smell","want","purple","smooth","was","put","so","watch","r","soar","water","r","some","wax","rain","sordid","we","raw","spray","we","recall","spring","were","red","still","what","repulsive","stop","when","rip","storm","whisper","rock","suit","who","rose","summer","why","run","sun","will","rust","sweat","wind","s","sweet","with","s","swim","with","s","symphony","woman","s","the","worship","s","the","y","s","the","y"]
 var users = new Firebase("https://fridge-poetry.firebaseio.com/users");
 var words = new Firebase("https://fridge-poetry.firebaseio.com/words");
 var currentUser = users.push({'user':'active'});
@@ -38,18 +39,10 @@ function addHandlers() {
 	})
 }
 
-var baseURL = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=1&maxLength=-1&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
+
 function getWord () {
-	var url = baseURL;
-	$.ajax ({ 
-		url: url,
-		dataType: "text" , 
-		timeout: 30000 
-		}) 
-	.success (function (data) { 
-		var word = JSON.parse(data).word;
-		placeWord(word);
-	})
+	var word = word_set[Math.floor(Math.random() * word_set.length)];
+	placeWord(word);
 }
 
 function randomVerical() {
