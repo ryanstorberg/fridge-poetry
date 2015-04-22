@@ -5,7 +5,7 @@ var currentUser = users.push({'user':'active'});
 currentUser.onDisconnect().remove();
 
 words.on('child_added', function(data, prevChildName) {
-	readPosition(data);
+	readWord(data);
 	makeDraggable();
 })
 
@@ -42,7 +42,7 @@ function addHandlers() {
 
 function getWord () {
 	var word = word_set[Math.floor(Math.random() * word_set.length)];
-	placeWord(word);
+	writeWord(word);
 }
 
 function randomVerical() {
@@ -51,11 +51,6 @@ function randomVerical() {
 
 function randomHorizontal() {
 	return Math.round(Math.random() * ($(window).width() - 100));
-}
-
-function placeWord(word) {
-  $('body').prepend('<p id=' + word + ' class=\'word ui-widget-content\' style=\'top: ' + randomVerical() + 'px; left: ' + randomHorizontal() + 'px\'>' + word + '</p>');
-  writePosition($('#' + word));
 }
 
 function makeDraggable() {
@@ -89,46 +84,42 @@ function makeDraggable() {
 	});
 }
 
-function writePosition(object) {
-	var vehicle = {};
-	var id = $(object).attr('id');
-	var position = $(object).position();
-	vehicle[id] = { 'top' : position.top, 'left' : position.left };
-	words.update(vehicle);
-}
-
-function writePositions() {
-	$('.word').each(function() {
-		var word = {};
-		var id = $(this).attr('id');
-		var position = $(this).position();
-		word[id] = { 'top' : position.top, 'left' : position.left };
-		words.update(word);
+function readWords(words) {
+	words.forEach(function(word) {
+		var top = word.child('position/top').val();
+		var left = word.child('position/left').val();
+		$('body').prepend('<p id=' + word.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + word.val()['term'] + '</p>');
 	})
 }
 
-function readPosition(data) {
-	var top = data.val()['top'];
-	var left = data.val()['left'];
-	if($('#' + data.key()).length == 1) {
-		$('#' + data.key()).css('top', top + 'px');
-		$('#' + data.key()).css('left', left + 'px');
-	} else {
-		$('body').prepend('<p id=' + data.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + data.key() + '</p>');
-	}
+function writeWord(word) {
+	var wordObject = {};
+	wordObject['term'] = word;
+	wordObject['position'] = {};
+	wordObject['position']['top'] = randomVerical();
+	wordObject['position']['left'] = randomHorizontal();
+	words.push(wordObject);
 }
 
-function readPositions(data) {
-	data.forEach(function(object) {
-		var top = object.val()['top'];
-		var left = object.val()['left'];
-		if($('#' + object.key()).length == 1) {
-			$('#' + object.key()).css('top', top + 'px');
-			$('#' + object.key()).css('left', left + 'px');
-		} else {
-			$('body').prepend('<p id=' + object.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + object.key() + '</p>');
-		}
-	})
+function readWord(word) {
+	var top = word.child('position/top').val();
+	var left = word.child('position/left').val();
+	$('body').prepend('<p id=' + word.key() + ' class=\'word ui-widget-content\' style=\'top: ' + top + 'px; left: ' + left + 'px\'>' + word.val()['term'] + '</p>');
+}
+
+function writePosition(word) {
+	var wordObject = {};
+	var id = $(word).attr('id');
+	var position = $(word).position();
+	wordObject['position'] = { 'top' : position.top, 'left' : position.left };
+	words.child(id).update(wordObject);
+}
+
+function readPosition(word) {
+	var top = word.child('position/top').val();
+	var left = word.child('position/left').val();
+	$('#' + word.key()).css('top', top + 'px');
+	$('#' + word.key()).css('left', left + 'px');
 }
 
 $(document).on('ready', function() {
@@ -136,6 +127,6 @@ $(document).on('ready', function() {
 		updateUsers(data);
 	})
 	words.once('value', function(data) {
-		readPositions(data);
+		readWords(data);
 	}, addHandlers())
 })
