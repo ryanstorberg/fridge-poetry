@@ -1,10 +1,9 @@
 var users = new Firebase("https://fridge-poetry.firebaseio.com/users");
 var words = new Firebase("https://fridge-poetry.firebaseio.com/words");
-var currentUser = users.push({'user':'active'});
-var currentElement;
+var currentUser = users.push({'name':'John Doe'});
 
 $('button').on('click', function() {
-		writeWord();
+	writeWord();
 })
 
 words.on('child_added', function(data, prevChildName) {
@@ -12,9 +11,7 @@ words.on('child_added', function(data, prevChildName) {
 })
 
 words.on('child_changed', function(data, prevChildName) {
-	if(data.key() != currentElement) {
-		readPosition(data);
-	}
+	readPosition(data);
 })
 
 words.on('child_removed', function(data) {
@@ -30,7 +27,6 @@ currentUser.onDisconnect().remove();
 function makeDraggable(word) {
 	$('#' + word.key()).draggable({
 		start: function() {
-			currentElement = $(this).attr('id');
 			writePosition(this);
 			$(this).css('z-index', '2');
 			$('button').css('background-color', 'rgb(175, 125, 125)');
@@ -40,7 +36,6 @@ function makeDraggable(word) {
 			writePosition(this);
 		},
 		stop: function() {
-			currentElement = null;
 			writePosition(this);
 			$(this).css('z-index', '0');
 			$('button').css('background-color', 'rgb(125, 175, 125)');
@@ -62,19 +57,17 @@ function makeDraggable(word) {
 
 function readUsers(data) {
 	var userCount = data.numChildren();
-	if(userCount > 2) {
-		$('#user-count p').text('You\'re sharing this screen with ' + (userCount - 1) + ' other people');
-	} else if(userCount == 2){
-		$('#user-count p').text('You\'re sharing this screen with ' + (userCount - 1) + ' other person');
+	if(userCount >= 2) {
+		$('#user-count p').text(userCount + ' active users');
 	} else {
-		$('#user-count p').text('There\'s nobody else here with you');
+		$('#user-count p').text(userCount + ' active user');
 	}
 }
 
 function writeWord() {
 	var word = wordLibrary[Math.floor(Math.random() * wordLibrary.length)];
 	var wordObject = {};
-	wordObject['term'] = word;
+	wordObject['name'] = word;
 	wordObject['position'] = {};
 	wordObject['position']['top'] = Math.round(Math.random() * ($(window).height() - 100));
 	wordObject['position']['left'] = Math.round(Math.random() * ($(window).width() - 100));
@@ -88,7 +81,7 @@ function readWord(word) {
 		"<p id='" + word.key() + "'" +
 		"class='word ui-widget-content'" +
 		"style='top:" + top + "px; left:" + left + "px'>" +
-		word.child('term').val() +
+		word.child('name').val() +
 		"</p>"
 	);
 	makeDraggable(word);
