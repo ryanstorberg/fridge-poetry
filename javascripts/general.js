@@ -62,6 +62,7 @@ function readUsers(data) {
 	} else {
 		$('#user-count p').text(userCount + ' active user');
 	}
+	document.title = "(" + userCount + ")" + " Fridge Poetry";
 }
 
 function writeWord() {
