@@ -39,8 +39,12 @@ function makeDraggable(word) {
 				$('#add').css('background-color', 'rgb(175, 125, 125)');
 				$('#add').css('border', '5px dotted white');
 			});
-			$('#clear').css('z-index', '0');
-			$('#clear').animate({bottom: '50px'}, 75);
+			$('#clear')
+				.css('z-index', '0')
+				.animate({
+					bottom: '50px',
+					opacity: 0
+				}, 75);
 		},
 		drag: function() {
 			writePosition(this);
@@ -55,8 +59,12 @@ function makeDraggable(word) {
 			$('#add').animate({bottom: '60px'}, 75, function() {
 				$('#add img').fadeIn(75);
 			});
-			$('#clear').css('z-index', '1');
-			$('#clear').animate({bottom: '25px'}, 75);
+			$('#clear')
+				.css('z-index', '1')
+				.animate({
+					bottom: '25px',
+					opacity: 1
+				}, 75);
 
 			wordTop = $(this).position().top + ($(this).height() / 2);
 			wordLeft = $(this).position().left + ($(this).width() / 2);

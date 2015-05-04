@@ -33,10 +33,10 @@ body {
   font-size: 16px;
   font-family: Times;
   background-color: rgb(175, 125, 125);
-  width: 50px;
+  width: 75px;
   position: fixed;
   bottom: 25px;
-  right: 37.5px;
+  right: 25px;
   color: white;
   border-radius: 5px;
   outline: none;
