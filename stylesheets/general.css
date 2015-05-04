@@ -25,14 +25,44 @@ body {
 
 #user-count p {
   margin: 5px;
+  font-size: 16px;
+  font-family: Times;
 }
 
-button {
+#clear {
+  font-size: 16px;
+  font-family: Times;
+  background-color: rgb(175, 125, 125);
+  width: 50px;
+  position: fixed;
+  bottom: 25px;
+  right: 37.5px;
+  color: white;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  font-size: 1em;
+  -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, .75);
+  -moz-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, .75);
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, .75);
+}
+
+#clear:active {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+#clear:hover {
+  cursor: pointer;
+}
+
+#add {
   width: 75px;
   height: 75px;
   border-radius: 100%;
   position: fixed;
-  bottom: 25px;
+  bottom: 60px;
   right: 25px;
   border: none;
   background-color: rgb(125, 175, 125);
@@ -43,23 +73,28 @@ button {
   outline: none;
   padding: 0;
   z-index: 1;
-  font-size: 1em;
 }
 
-button:active {
+#add:active {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
 
-button:hover {
+#add:hover {
   cursor: pointer;
 }
 
-button img {
+#add img {
   width: 50px;
   height: 50px;
   margin: 12.5px;
+}
+
+#add p {
+  display: none;
+  font-size: 16px;
+  font-family: Times;
 }
 
 .word {
@@ -67,6 +102,7 @@ button img {
   padding: 5px;
   display: inline-block;
   position: absolute;
+  font-family: Times;
 }
 
 .word:hover {

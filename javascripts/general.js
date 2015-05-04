@@ -2,7 +2,11 @@ var users = new Firebase("https://fridge-poetry.firebaseio.com/users");
 var words = new Firebase("https://fridge-poetry.firebaseio.com/words");
 var currentUser = users.push({'name':'John Doe'});
 
-$('button').on('click', function() {
+$('#clear').on('click', function() {
+	words.remove();
+})
+
+$('#add').on('click', function() {
 	writeWord();
 })
 
@@ -29,8 +33,14 @@ function makeDraggable(word) {
 		start: function() {
 			writePosition(this);
 			$(this).css('z-index', '2');
-			$('button').css('background-color', 'rgb(175, 125, 125)');
-			$('button img').attr('src', 'images/minus.png');
+			$('#add img').fadeOut();
+			$('#add').animate({bottom: '25px'}, function() {
+				$('#add p').fadeIn();
+				$('#add').css('background-color', 'rgb(175, 125, 125)');
+				$('#add').css('border', '5px dotted white');
+			});
+			$('#clear').css('z-index', '0');
+			$('#clear').animate({bottom: '50px'});
 		},
 		drag: function() {
 			writePosition(this);
@@ -38,15 +48,22 @@ function makeDraggable(word) {
 		stop: function() {
 			writePosition(this);
 			$(this).css('z-index', '0');
-			$('button').css('background-color', 'rgb(125, 175, 125)');
-			$('button img').attr('src', 'images/plus.png');
+			$('#add').css('background-color', 'rgb(125, 175, 125)');
+			$('#add p').fadeOut();
+			$('#add').css('border', 'none');
+			$('#clear').fadeIn();
+			$('#add').animate({bottom: '60px'}, function() {
+				$('#add img').fadeIn();
+			});
+			$('#clear').css('z-index', '1');
+			$('#clear').animate({bottom: '25px'});
 
 			wordTop = $(this).position().top + ($(this).height() / 2);
 			wordLeft = $(this).position().left + ($(this).width() / 2);
-			buttonStartTop = $('button').position().top;
-			buttonEndTop = $('button').position().top + 50;
-			buttonStartLeft = $('button').position().left
-			buttonEndLeft = $('button').position().left + 50;
+			buttonStartTop = $('#add').position().top;
+			buttonEndTop = $('#add').position().top + 50;
+			buttonStartLeft = $('#add').position().left
+			buttonEndLeft = $('#add').position().left + 50;
 
 			if((wordTop > buttonStartTop && wordTop < buttonEndTop) && (wordLeft > buttonStartLeft && wordLeft < buttonEndLeft)) {
 				words.child($(this).attr('id')).remove();
@@ -58,9 +75,9 @@ function makeDraggable(word) {
 function readUsers(data) {
 	var userCount = data.numChildren();
 	if(userCount >= 2) {
-		$('#user-count p').text(userCount + ' active users');
+		$('#user-count p').text(userCount + ' Active Users');
 	} else {
-		$('#user-count p').text(userCount + ' active user');
+		$('#user-count p').text(userCount + ' Active User');
 	}
 	document.title = "(" + userCount + ")" + " Fridge Poetry";
 }
