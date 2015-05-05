@@ -33,18 +33,19 @@ function makeDraggable(word) {
 		start: function() {
 			writePosition(this);
 			$(this).css('z-index', '2');
-			$('#add img').fadeOut(75);
-			$('#add').animate({bottom: '25px'}, 75, function() {
+			$('#add').animate({
+				bottom: '25px'
+			}, 75, function() {
+				$('#add img').hide();
 				$('#add p').fadeIn(75);
 				$('#add').css('background-color', 'rgb(175, 125, 125)');
-				$('#add').css('border', '5px dotted white');
 			});
-			$('#clear')
-				.css('z-index', '0')
-				.animate({
-					bottom: '50px',
-					opacity: 0
-				}, 75);
+			$('#clear').animate({
+				zIndex: 0,
+				opacity: 0,
+				height: '75px',
+				borderRadius: '100%'
+			}, 75);
 		},
 		drag: function() {
 			writePosition(this);
@@ -52,19 +53,19 @@ function makeDraggable(word) {
 		stop: function() {
 			writePosition(this);
 			$(this).css('z-index', '0');
-			$('#add').css('background-color', 'rgb(125, 175, 125)');
-			$('#add p').fadeOut(75);
-			$('#add').css('border', 'none');
-			$('#clear').fadeIn(75);
-			$('#add').animate({bottom: '60px'}, 75, function() {
+			$('#add').animate({
+				bottom: '60px'
+			}, 75, function() {
+				$('#add p').hide();
 				$('#add img').fadeIn(75);
+				$('#add').css('background-color', 'rgb(125, 175, 125)');
 			});
-			$('#clear')
-				.css('z-index', '1')
-				.animate({
-					bottom: '25px',
-					opacity: 1
-				}, 75);
+			$('#clear').animate({
+				zIndex: 1,
+				opacity: 1,
+				height: '23px',
+				borderRadius: '5px'
+			}, 75);
 
 			wordTop = $(this).position().top + ($(this).height() / 2);
 			wordLeft = $(this).position().left + ($(this).width() / 2);
